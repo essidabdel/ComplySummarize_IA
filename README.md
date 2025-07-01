@@ -1,7 +1,10 @@
 # ComplySummarize_IA – Backend
 
 ## Présentation
-Ce backend permet d'uploader un PDF, d'en extraire le texte, de le découper en parties, puis de générer un résumé automatique pour chaque partie grâce à l'API Hugging Face (modèle BART). Les utilisateurs peuvent s'inscrire, se connecter, uploader des PDF et récupérer leurs résumés.
+Ce backend permet à un utilisateur d'uploader un PDF, d'en extraire le texte, de le découper en parties, puis de générer automatiquement :
+- un résumé pour chaque partie
+- un résumé global du document
+Le tout grâce à un modèle open source (Mistral 7B) hébergé localement via Ollama. Les utilisateurs peuvent s'inscrire, se connecter, uploader des PDF et retrouver l'historique de leurs résumés.
 
 ---
 
@@ -13,20 +16,32 @@ git clone <url-du-repo>
 cd ComplySummarize_IA
 ```
 
-2. **Installer les dépendances**
+2. **Installer les dépendances Node.js**
 ```bash
 npm install
 ```
 
-3. **Configurer les variables d'environnement**
+3. **Installer Ollama et le modèle Mistral 7B**
+- Télécharger Ollama : https://ollama.com/download
+- Installer le modèle :
+```bash
+ollama pull mistral
+```
+
+4. **Lancer Ollama avec Mistral**
+```bash
+ollama run mistral
+```
+Laisser cette fenêtre ouverte (Ollama écoute sur http://localhost:11434)
+
+5. **Configurer les variables d'environnement**
 Créer un fichier `.env` à la racine avec :
 ```
 MONGO_URI=<votre_uri_mongodb>
 JWT_SECRET=<votre_secret_jwt>
-HF_API_KEY=<votre_token_huggingface>
 ```
 
-4. **Lancer le serveur**
+6. **Lancer le serveur Node.js**
 ```bash
 npm start
 ```
@@ -48,7 +63,13 @@ Le serveur tourne par défaut sur le port 5000.
 - `POST /api/summaries` : Génère les résumés pour un PDF déjà uploadé
   - Body : `{ pdfPath: "uploads/nom_du_fichier.pdf" }`
   - Header : `Authorization: Bearer <token>`
-  - Réponse : `{ summaries: [ ... ] }` (un résumé par partie)
+  - Réponse :
+    ```json
+    {
+      "summaries": [ "Résumé partie 1", "Résumé partie 2", ... ],
+      "globalSummary": "Résumé global du document."
+    }
+    ```
 
 ### Récupération des résumés
 - `GET /api/summaries` : Liste tous les résumés de l'utilisateur connecté
@@ -57,14 +78,9 @@ Le serveur tourne par défaut sur le port 5000.
 
 ## Fonctionnement du résumé automatique
 - Le texte du PDF est extrait puis découpé en morceaux de 500 caractères.
-- Chaque morceau est envoyé à l'API Hugging Face (modèle bart-large-cnn) pour générer un résumé.
+- Chaque morceau est envoyé à Ollama (modèle mistral) pour générer un résumé localement.
 - Tous les résumés sont retournés sous forme de tableau.
-
----
-
-## Configuration Hugging Face
-- Créez un compte sur https://huggingface.co/
-- Ajoutez ce token dans le `.env` sous `HF_API_KEY`
+- Un résumé global est généré à partir de tous les résumés de parties.
 
 ---
 
@@ -83,7 +99,15 @@ curl -X POST http://localhost:5000/api/summaries \
 - MongoDB (Mongoose)
 - pdf-parse
 - axios
-- Hugging Face Inference API
+- Ollama (Mistral 7B)
+
+---
+
+## Architecture souveraine & sécurité
+- Aucun appel à une API externe : tout le traitement IA est fait localement.
+- Le modèle Mistral 7B est hébergé sur le serveur interne via Ollama.
+- Les fichiers `.env` et les secrets ne doivent jamais être poussés sur GitHub.
+- Cette solution répond aux exigences de souveraineté et de confidentialité des données.
 
 ---
 

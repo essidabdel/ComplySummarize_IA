@@ -8,7 +8,6 @@ exports.createSummary = async (req, res) => {
     const pdfPath = req.body.pdfPath || req.file?.path;
     if (!pdfPath) return res.status(400).json({ message: "Aucun PDF fourni" });
 
-    
     const dataBuffer = fs.readFileSync(pdfPath);
     let text = (await pdfParse(dataBuffer)).text;
     text = text.replace(/\s+/g, ' ').trim();
@@ -17,21 +16,44 @@ exports.createSummary = async (req, res) => {
     let summaries = [];
     for (let i = 0; i < text.length; i += chunkSize) {
       const chunk = text.slice(i, i + chunkSize).trim();
-      if (chunk.length < 50) continue; 
+      if (chunk.length < 50) continue;
       try {
-        const hfResponse = await axios.post(
-          "https://api-inference.huggingface.co/models/facebook/bart-large-cnn",
-          { inputs: chunk },
-          { headers: { Authorization: `Bearer ${process.env.HF_API_KEY}` } }
+        const ollamaResponse = await axios.post(
+          "http://localhost:11434/api/generate",
+          {
+            model: "mistral",
+            prompt: `Résume ce texte de façon structurée et concise :\n${chunk}`,
+            stream: false
+          }
         );
-        summaries.push(hfResponse.data[0]?.summary_text || "Résumé non généré");
+        summaries.push(ollamaResponse.data.response || "Résumé non généré");
       } catch (err) {
         summaries.push("Erreur lors du résumé de cette partie");
       }
     }
+
+    // Générer un résumé global à partir de tous les résumés de parties
+    let globalSummary = "Résumé global non généré";
+    try {
+      const allSummaries = summaries.join(' ');
+      const globalPrompt = `Fais un résumé global, structuré et concis de ce texte :\n${allSummaries.slice(0, 1500)}`;
+      const globalResponse = await axios.post(
+        "http://localhost:11434/api/generate",
+        {
+          model: "mistral",
+          prompt: globalPrompt,
+          stream: false
+        }
+      );
+      globalSummary = globalResponse.data.response || globalSummary;
+    } catch (err) {
+      // Optionnel : log l'erreur
+    }
+
+    // Sauvegarder le résumé global et les parties dans la base
     const summary = new Summary({ content: summaries.join("\n\n"), userId: req.user.id });
     await summary.save();
-    res.status(201).json({ summaries });
+    res.status(201).json({ summaries, globalSummary });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Erreur lors de la génération du résumé" });
