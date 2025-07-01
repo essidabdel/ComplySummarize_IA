@@ -106,7 +106,6 @@ curl -X POST http://localhost:5000/api/summaries \
 ## Architecture souveraine & sécurité
 - Aucun appel à une API externe : tout le traitement IA est fait localement.
 - Le modèle Mistral 7B est hébergé sur le serveur interne via Ollama.
-- Les fichiers `.env` et les secrets ne doivent jamais être poussés sur GitHub.
 - Cette solution répond aux exigences de souveraineté et de confidentialité des données.
 
 ---

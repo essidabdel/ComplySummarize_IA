@@ -32,7 +32,6 @@ exports.createSummary = async (req, res) => {
       }
     }
 
-    // Générer un résumé global à partir de tous les résumés de parties
     let globalSummary = "Résumé global non généré";
     try {
       const allSummaries = summaries.join(' ');
@@ -47,10 +46,8 @@ exports.createSummary = async (req, res) => {
       );
       globalSummary = globalResponse.data.response || globalSummary;
     } catch (err) {
-      // Optionnel : log l'erreur
     }
 
-    // Sauvegarder le résumé global et les parties dans la base
     const summary = new Summary({ content: summaries.join("\n\n"), userId: req.user.id });
     await summary.save();
     res.status(201).json({ summaries, globalSummary });
