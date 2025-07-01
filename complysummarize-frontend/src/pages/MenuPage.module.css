@@ -1,0 +1,73 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #181818;
+  color: #fff;
+}
+.header {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  padding: 1.5rem;
+  gap: 1rem;
+}
+.button {
+  background: #C75C5C;
+  color: #fff;
+  border-radius: 12px;
+  padding: 0.5rem 1.5rem;
+  font-weight: 600;
+  border: none;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+.button:hover {
+  background: #E07A5F;
+}
+.center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.text {
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+.card {
+  background: #232323;
+  border-radius: 12px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+}
+.icon {
+  width: 64px;
+  height: 64px;
+  background: #181818;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #E07A5F;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+.uploadLabel {
+  background: #C75C5C;
+  color: #fff;
+  border-radius: 12px;
+  padding: 0.5rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.uploadLabel:hover {
+  background: #E07A5F;
+} 
