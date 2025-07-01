@@ -1,0 +1,111 @@
+.pageWrapper {
+  min-height: 100vh;
+  background: #181818;
+  display: flex;
+  flex-direction: column;
+}
+
+.topBar {
+  width: 100%;
+  height: 2.5rem;
+  background: #232323;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem 0 1.5rem;
+  color: #bdbdbd;
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+.topBarTitle {
+  font-size: 1.1rem;
+}
+.topBarButtons {
+  display: flex;
+  gap: 1.2rem;
+}
+
+.button {
+  background: #C75C5C;
+  color: #fff;
+  border-radius: 18px;
+  padding: 0.7rem 2.2rem;
+  font-weight: 600;
+  border: none;
+  font-size: 1.1rem;
+  transition: background 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+}
+.button:hover {
+  background: #E07A5F;
+}
+
+.centerContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2.5rem;
+}
+.commentIcon {
+  color: #E07A5F;
+  font-size: 2.2rem;
+  margin-bottom: 1.2rem;
+}
+.mainText {
+  color: #F6CFC5;
+  font-size: 2.1rem;
+  font-weight: 400;
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+.uploadCard {
+  background: #211616;
+  border-radius: 28px;
+  padding: 2.5rem 3.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  min-width: 340px;
+}
+.uploadIcon {
+  color: #C75C5C;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+.uploadText {
+  color: #fff;
+  font-size: 1.15rem;
+  margin-bottom: 0.2rem;
+}
+.uploadSubtext {
+  color: #bdbdbd;
+  font-size: 0.95rem;
+  margin-bottom: 0.7rem;
+}
+.browseButton {
+  background: #C75C5C;
+  color: #fff;
+  border-radius: 12px;
+  padding: 0.7rem 2.5rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: none;
+  text-align: center;
+  margin-top: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+  display: inline-block;
+}
+.browseButton:hover {
+  background: #E07A5F;
+}
+.fileInput {
+  display: none;
+} 
