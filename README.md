@@ -33,6 +33,7 @@ cd ComplySummarize_IA
 npm install
 # Configurer .env (voir ComplySummarize_IA/README.md)
 # Lancer Ollama avec Mistral 7B : ollama run mistral
+mkdir uploads
 npm start
 ```
 
@@ -61,4 +62,4 @@ npm start
 ---
 
 ## Auteur
-Projet réalisé dans le cadre d'un POC pour la veille réglementaire automatisée. 
+Projet réalisé par [HKB06](https://github.com/HKB06) – POC de veille réglementaire automatisée. 
