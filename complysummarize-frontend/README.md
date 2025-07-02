@@ -43,16 +43,4 @@ Assurez-vous d'avoir [Node.js](https://nodejs.org/) installé sur votre machine.
 - React
 - React Router DOM
 
-## Installation automatique
-
-Pour installer automatiquement toutes les dépendances nécessaires, vous pouvez utiliser le script suivant :
-
-```bash
-sh install.sh
-```
-
-Ce script exécutera la commande `npm install` pour vous.
-
 ---
-
-Développé avec [Create React App](https://github.com/facebook/create-react-app).
