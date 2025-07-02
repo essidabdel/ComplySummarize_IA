@@ -1,2 +1,43 @@
-.env    
-nodemodules
+# Node modules
+node_modules/
+**/node_modules/
+
+# Build output
+build/
+dist/
+**/build/
+**/dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Env files
+.env
+.env.*
+**/.env
+**/.env.*
+
+# Coverage
+coverage/
+**/coverage/
+
+# Misc
+.DS_Store
+*.local
+.pnp
+.pnp.js
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Ollama (si jamais tu ajoutes des modèles ou caches)
+ollama/
+**/ollama/
+
+# PDF uploads (optionnel, à commenter si tu veux versionner les exemples)
+ComplySummarize_IA/uploads/ 
