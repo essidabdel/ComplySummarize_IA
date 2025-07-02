@@ -3,6 +3,8 @@ const fs = require("fs");
 const pdfParse = require("pdf-parse");
 const axios = require("axios");
 
+const OLLAMA_URL = "http://ollama:11434/api/generate";
+
 exports.createSummary = async (req, res) => {
   try {
     const pdfPath = req.body.pdfPath || req.file?.path;
@@ -17,7 +19,6 @@ exports.createSummary = async (req, res) => {
     let globalSummary = "Résumé non généré";
 
     if (mode === "complet") {
-      
       const chunkSize = 500;
       let summaries = [];
       for (let i = 0; i < text.length; i += chunkSize) {
@@ -25,7 +26,7 @@ exports.createSummary = async (req, res) => {
         if (chunk.length < 50) continue;
         try {
           const ollamaResponse = await axios.post(
-            "http://localhost:11434/api/generate",
+            OLLAMA_URL,
             {
               model: "mistral",
               prompt: `Résume ce texte de façon structurée et concise en français, même si le texte est dans une autre langue :\n${chunk}`,
@@ -41,7 +42,7 @@ exports.createSummary = async (req, res) => {
         const allSummaries = summaries.join(' ');
         const globalPrompt = `Fais un résumé global, structuré et concis en français, même si le texte est dans une autre langue :\n${allSummaries.slice(0, 3000)}`;
         const globalResponse = await axios.post(
-          "http://localhost:11434/api/generate",
+          OLLAMA_URL,
           {
             model: "mistral",
             prompt: globalPrompt,
@@ -61,7 +62,7 @@ exports.createSummary = async (req, res) => {
       const prompt = `Fais un résumé très court (10 phrases minimum) en français, même si le texte est dans une autre langue du texte suivant :\n${extrait}`;
       try {
         const response = await axios.post(
-          "http://localhost:11434/api/generate",
+          OLLAMA_URL,
           {
             model: "mistral",
             prompt: prompt,

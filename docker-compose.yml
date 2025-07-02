@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:7
+    restart: always
+    container_name: mongo
+    environment:
+      MONGO_INITDB_DATABASE: complysummarize
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    # Télécharge le modèle mistral au démarrage
+    entrypoint: ["/bin/sh", "-c", "ollama serve & sleep 5 && ollama pull mistral && tail -f /dev/null"]
+
+  backend:
+    build:
+      context: ./ComplySummarize_IA
+    container_name: backend
+    environment:
+      MONGO_URI: mongodb://mongo:27017/complysummarize
+      JWT_SECRET: votresecretdocker
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./ComplySummarize_IA/uploads:/app/uploads
+    depends_on:
+      - mongo
+      - ollama
+
+  frontend:
+    build:
+      context: ./complysummarize-frontend
+    container_name: frontend
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
+  ollama_data:
