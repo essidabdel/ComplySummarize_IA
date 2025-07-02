@@ -35,9 +35,9 @@ coverage/
 *.sublime-workspace
 *.sublime-project
 
-# Ollama (si jamais tu ajoutes des modèles ou caches)
+# Ollama 
 ollama/
 **/ollama/
 
-# PDF uploads (optionnel, à commenter si tu veux versionner les exemples)
+# PDF uploads 
 ComplySummarize_IA/uploads/ 
