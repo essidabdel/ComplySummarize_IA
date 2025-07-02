@@ -61,4 +61,4 @@ npm start
 ---
 
 ## Auteur
-Projet réalisé par [HKB06](https://github.com/HKB06) – POC de veille réglementaire automatisée. 
+Projet réalisé par le groupe 11(https://github.com/HKB06) – POC de veille réglementaire automatisée. 
