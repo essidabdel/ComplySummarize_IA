@@ -31,14 +31,14 @@ export default function HistoryPage() {
     fetchSummaries();
   }, []);
 
-  // Filtrage par recherche (optionnel)
+ 
   const filteredSummaries = summaries.filter(s =>
     s.filename && s.filename.toLowerCase().includes(search.toLowerCase())
   );
 
   const selectedSummary = filteredSummaries[selectedIdx] || null;
 
-  // Déconnexion
+  
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/');

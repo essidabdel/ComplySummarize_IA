@@ -5,19 +5,19 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {
-  // États pour le formulaire de connexion
+  
   const [loginId, setLoginId] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
 
-  // États pour le formulaire d'inscription
+  
   const [registerId, setRegisterId] = useState('');
   const [registerPassword, setRegisterPassword] = useState('');
   const [registerError, setRegisterError] = useState('');
   const [registerSuccess, setRegisterSuccess] = useState('');
 
-  // Handler pour la soumission du formulaire de connexion
+  
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoginError('');
@@ -26,16 +26,16 @@ export default function LoginPage() {
         email: loginId,
         password: loginPassword
       });
-      // Stocker le token JWT
+      
       localStorage.setItem('token', response.data.token);
-      // Rediriger vers la page d'accueil/menu
+      
       navigate('/menu');
     } catch (err) {
       setLoginError('Identifiant ou mot de passe incorrect.');
     }
   };
 
-  // Handler pour la soumission du formulaire d'inscription
+  
   const handleRegister = async (e) => {
     e.preventDefault();
     setRegisterError('');
@@ -45,7 +45,7 @@ export default function LoginPage() {
         email: registerId,
         password: registerPassword
       });
-      // Si le backend renvoie un token, on connecte automatiquement l'utilisateur
+      
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
         navigate('/menu');
