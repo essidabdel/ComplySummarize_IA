@@ -31,14 +31,14 @@ export default function HistoryPage() {
     fetchSummaries();
   }, []);
 
- 
+  // Filtrage par recherche (optionnel)
   const filteredSummaries = summaries.filter(s =>
     s.filename && s.filename.toLowerCase().includes(search.toLowerCase())
   );
 
   const selectedSummary = filteredSummaries[selectedIdx] || null;
 
-  
+  // Déconnexion
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/');
@@ -95,6 +95,25 @@ export default function HistoryPage() {
                 <h2 className={styles.title}>
                   Rendu du document <span className={styles.highlight}>{selectedSummary.filename}</span>
                 </h2>
+                <button
+                  className={styles.downloadButton}
+                  onClick={async () => {
+                    const token = localStorage.getItem('token');
+                    const response = await fetch(`http://localhost:5000/api/summaries/${selectedSummary._id}/download`, {
+                      headers: { Authorization: `Bearer ${token}` }
+                    });
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = selectedSummary.filename || 'resume.pdf';
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                  }}
+                  style={{marginBottom: '16px'}}
+                >
+                  Télécharger PDF
+                </button>
                 <div className={styles.summaryCard}>
                   <div className={styles.scrollableSummary}>
                     <p className={styles.text}>

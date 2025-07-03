@@ -96,7 +96,10 @@ export default function MenuPage() {
         </div>
         <div className={styles.topBarButtons}>
           <button className={styles.button} onClick={() => navigate('/history')}>Historique</button>
-          <button className={styles.button}>Se déconnecter</button>
+          <button className={styles.button} onClick={() => {
+            localStorage.removeItem('token');
+            navigate('/');
+          }}>Se déconnecter</button>
         </div>
       </div>
       <div className={styles.centerContent}>

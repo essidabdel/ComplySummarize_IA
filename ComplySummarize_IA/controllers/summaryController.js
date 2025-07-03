@@ -2,8 +2,7 @@ const Summary = require("../models/Summary");
 const fs = require("fs");
 const pdfParse = require("pdf-parse");
 const axios = require("axios");
-
-const OLLAMA_URL = "http://ollama:11434/api/generate";
+const PDFDocument = require('pdfkit');
 
 exports.createSummary = async (req, res) => {
   try {
@@ -19,6 +18,7 @@ exports.createSummary = async (req, res) => {
     let globalSummary = "Résumé non généré";
 
     if (mode === "complet") {
+      
       const chunkSize = 500;
       let summaries = [];
       for (let i = 0; i < text.length; i += chunkSize) {
@@ -26,10 +26,10 @@ exports.createSummary = async (req, res) => {
         if (chunk.length < 50) continue;
         try {
           const ollamaResponse = await axios.post(
-            OLLAMA_URL,
+            "http://localhost:11434/api/generate",
             {
               model: "mistral",
-              prompt: `Résume ce texte de façon structurée et concise en français, même si le texte est dans une autre langue :\n${chunk}`,
+              prompt: `Avant de résumer, anonymise toutes les informations personnelles (nom, prénom, adresse, numéro étudiant,Date de naissance, etc.) en les remplaçant par des xxxx. Résume ce texte de façon structurée et concise en français, même si le texte est dans une autre langue :\n${chunk}`,
               stream: false
             }
           );
@@ -40,9 +40,9 @@ exports.createSummary = async (req, res) => {
       }
       try {
         const allSummaries = summaries.join(' ');
-        const globalPrompt = `Fais un résumé global, structuré et concis en français, même si le texte est dans une autre langue :\n${allSummaries.slice(0, 3000)}`;
+        const globalPrompt = `Avant de résumer, anonymise toutes les informations personnelles (nom, prénom, adresse, numéro étudiant,Date de naissance,  etc.) en les remplaçant par des xxxx. Fais un résumé global, structuré et concis en français, même si le texte est dans une autre langue :\n${allSummaries.slice(0, 3000)}`;
         const globalResponse = await axios.post(
-          OLLAMA_URL,
+          "http://localhost:11434/api/generate",
           {
             model: "mistral",
             prompt: globalPrompt,
@@ -59,10 +59,10 @@ exports.createSummary = async (req, res) => {
       return res.status(201).json({ summaries, content: summary.content });
     } else {
       const extrait = text.slice(0, 3000);
-      const prompt = `Fais un résumé très court (10 phrases minimum) en français, même si le texte est dans une autre langue du texte suivant :\n${extrait}`;
+      const prompt = `Avant de résumer, anonymise toutes les informations personnelles (nom, prénom, adresse, numéro étudiant,Date de naissance, etc.) en les remplaçant par des xxxx. Fais un résumé très court (10 phrases minimum) en français, même si le texte est dans une autre langue du texte suivant :\n${extrait}`;
       try {
         const response = await axios.post(
-          OLLAMA_URL,
+          "http://localhost:11434/api/generate",
           {
             model: "mistral",
             prompt: prompt,
@@ -90,5 +90,26 @@ exports.getSummaries = async (req, res) => {
     res.json(summaries);
   } catch (err) {
     res.status(500).json({ message: "Erreur récupération résumés" });
+  }
+};
+
+exports.downloadSummaryPdf = async (req, res) => {
+  try {
+    const summary = await Summary.findOne({ _id: req.params.id, userId: req.user.id });
+    if (!summary) return res.status(404).json({ message: "Résumé non trouvé" });
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=\"${summary.filename || 'resume'}.pdf\"`);
+
+    const doc = new PDFDocument();
+    doc.pipe(res);
+
+    doc.fontSize(18).text(`Résumé du document : ${summary.filename || ''}`, { underline: true });
+    doc.moveDown();
+    doc.fontSize(12).text(summary.content || 'Aucun résumé disponible.');
+
+    doc.end();
+  } catch (err) {
+    res.status(500).json({ message: "Erreur lors du téléchargement du PDF" });
   }
 };
